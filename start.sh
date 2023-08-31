@@ -19,13 +19,16 @@ command="$JBOSS_HOME/bin/add-user-keycloak.sh -r master  -u ${KEYCLOAK_ADMIN} -p
 
 $command
 
-sleep 1h
 # set -b option to listen on all adresses
 JBOSS_SCRIPT="${JBOSS_HOME}/bin/standalone.sh -b 0.0.0.0"
 
-prog="keycloak server"
+
+echo 
+java --version
+echo 
+
 
 ### JBOSS_PIDFILE=$JBOSS_PIDFILE $JBOSS_SCRIPT
 
-#$JBOSS_SCRIPT
+$JBOSS_SCRIPT
 

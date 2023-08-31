@@ -76,20 +76,24 @@ COPY rh-sso-7.6.0-server-dist.zip rh-sso.zip
 COPY /extentions  /tmp/extentions
 RUN unzip rh-sso.zip && \
 mv rh-sso-7.6 /opt/jboss/sso &&  \
-chown -R jboss:jboss /opt/jboss /tmp/extentions
+chown -R jboss:jboss /opt/jboss /tmp/extentions && \
+rm /tmp/rh-sso.zip
 
 
 
 USER jboss
 
 RUN id && cd /opt/jboss/sso && \
-./bin/jboss-cli.sh --file=/tmp/extentions/postgres.cli
+./bin/jboss-cli.sh --file=/tmp/extentions/postgres.cli && \
+rm -r  standalone/configuration/standalone_xml_history
 
 
 
 
 EXPOSE 8080/tcp
+EXPOSE 8443/tcp
 
+WORKDIR /opt/jboss
 
 ENTRYPOINT ["/opt/jboss/start"]
 
