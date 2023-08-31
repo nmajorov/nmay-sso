@@ -47,6 +47,22 @@ RUN make
 RUN make install
 RUN ldconfig
 
+
+
+### copy start ###
+
+COPY start.sh /opt/jboss/start
+
+RUN chmod a+rwx /opt/jboss/start
+
+
+
+############ SSO ################## 
+### unzip distribution of sso here
+
+
+
+
 # Create a user and group used to launch processes
 # The user ID 1000 is the default for the first "regular" user on Fedora/RHEL,
 # so there is a high chance that this ID will be equal to the current user
@@ -55,19 +71,26 @@ RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s
     chmod 755 /opt/jboss
 
 
-WORKDIR /opt/jboss
-    
-EXPOSE 8080/tcp
+WORKDIR /tmp
+COPY rh-sso-7.6.0-server-dist.zip rh-sso.zip
+COPY /extentions  /tmp/extentions
+RUN unzip rh-sso.zip && \
+mv rh-sso-7.6 /opt/jboss/sso &&  \
+chown -R jboss:jboss /opt/jboss /tmp/extentions
 
-COPY start.sh /start
 
-RUN chmod a+rwx /start
 
 USER jboss
 
-CMD ["1d"]
-ENTRYPOINT ["/start"]
+RUN id && cd /opt/jboss/sso && \
+./bin/jboss-cli.sh --file=/tmp/extentions/postgres.cli
 
-#CMD ["-h"]
-#ENTRYPOINT ["/usr/local/bin/curl"]
+
+
+
+EXPOSE 8080/tcp
+
+
+ENTRYPOINT ["/opt/jboss/start"]
+
 
