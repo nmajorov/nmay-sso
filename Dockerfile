@@ -72,24 +72,24 @@ RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s
 
 
 WORKDIR /tmp
+
 COPY rh-sso-7.6.0-server-dist.zip rh-sso.zip
+COPY rh-sso-7.6.4-patch.zip rh-patch.zip
 COPY /extentions  /tmp/extentions
-RUN unzip rh-sso.zip && \
+
+RUN unzip -q rh-sso.zip && \
 mv rh-sso-7.6 /opt/jboss/sso &&  \
-chown -R jboss:jboss /opt/jboss /tmp/extentions && \
-rm /tmp/rh-sso.zip
+cd /opt/jboss/sso && \
+./bin/jboss-cli.sh --file=/tmp/extentions/patch.cli && \
+./bin/jboss-cli.sh --file=/tmp/extentions/postgres.cli && \
+rm -r  standalone/configuration/standalone_xml_history && \
+chown -R jboss:jboss /opt/jboss && \
+rm /tmp/rh-sso.zip /tmp/rh-patch.zip && rm -r /tmp/extentions
+
 
 
 
 USER jboss
-
-RUN id && cd /opt/jboss/sso && \
-./bin/jboss-cli.sh --file=/tmp/extentions/postgres.cli && \
-rm -r  standalone/configuration/standalone_xml_history
-
-
-
-
 EXPOSE 8080/tcp
 EXPOSE 8443/tcp
 

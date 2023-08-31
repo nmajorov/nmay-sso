@@ -1,0 +1,6 @@
+
+## admin cli commands to edit the configuration
+embed-server --std-out=echo  --server-config=standalone.xml
+patch apply /tmp/rh-patch.zip
+quit
+
