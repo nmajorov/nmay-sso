@@ -74,7 +74,7 @@ RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s
 WORKDIR /tmp
 
 COPY rh-sso-7.6.0-server-dist.zip rh-sso.zip
-COPY rh-sso-7.6.4-patch.zip rh-patch.zip
+COPY rh-sso-7.6.5-patch.zip rh-patch.zip
 COPY /extentions  /tmp/extentions
 
 RUN unzip -q rh-sso.zip && \
